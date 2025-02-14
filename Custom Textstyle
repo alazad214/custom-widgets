@@ -1,0 +1,41 @@
+Custom TextStyle--->
+
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'app_colors.dart';
+
+class TextFontStyle {
+  TextFontStyle._();
+
+  static var textStyle20w600cFFFFFF = GoogleFonts.poppins(
+    color: AppColors.cFFFFFF,
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w500,
+  );
+
+  static var textStyle24w600c333333 = GoogleFonts.poppins(
+    color: AppColors.c333333,
+    fontSize: 24.sp,
+    fontWeight: FontWeight.w600,
+  );
+
+  static var textStyle20w600c333333 = TextStyle(
+    color: AppColors.c333333,
+    fontSize: 20.sp,
+    fontWeight: FontWeight.w600,
+  );
+}
+
+
+
+Example--->
+
+                 Text(
+                     'Forget Password?',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextFontStyle.textStyle14w400c333333.copyWith(
+                              color: AppColors.primaryColor,
+                              decoration: TextDecoration.underline,
+                          ),
+                      ),
