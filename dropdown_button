@@ -1,0 +1,132 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mlodin90/constants/app_colors.dart';
+
+class CustomDropdown<T> extends StatefulWidget {
+  final String? hintText;
+  final String? labelText;
+  final List<T> items;
+  final T? value;
+  final Function(T?)? onChanged;
+  final String? Function(T?)? validator;
+  final Widget Function(T)? itemBuilder;
+  final bool? isEnabled;
+  final bool? isRead;
+  final double? borderRadius;
+  final Color? fillColor;
+  final TextStyle? hintTextStyle;
+  final TextStyle? labelStyle;
+  final TextStyle? style;
+  final Color? borderColor;
+  final EdgeInsetsGeometry? contentPadding;
+  final bool? isElevation;
+
+  const CustomDropdown({
+    super.key,
+    required this.items,
+    this.value,
+    this.onChanged,
+    this.hintText,
+    this.labelText,
+    this.validator,
+    this.itemBuilder,
+    this.isEnabled = true,
+    this.isRead = false,
+    this.borderRadius,
+    this.fillColor,
+    this.hintTextStyle,
+    this.labelStyle,
+    this.style,
+    this.borderColor,
+    this.contentPadding,
+    this.isElevation = false,
+  });
+
+  @override
+  State<CustomDropdown<T>> createState() => _CustomDropdownState<T>();
+}
+
+class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
+  bool hasError = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      elevation: hasError ? 0 : (widget.isElevation == true ? 0 : 10),
+      borderRadius: BorderRadius.circular(widget.borderRadius ?? 18),
+      shadowColor: Colors.black38,
+      child: DropdownButtonFormField<T>(
+        value: widget.value,
+        isExpanded: true,
+        onChanged: widget.isEnabled == true && widget.isRead == false
+            ? widget.onChanged
+            : null,
+        validator: (value) {
+          final result = widget.validator?.call(value);
+          setState(() {
+            hasError = result != null;
+          });
+          return result;
+        },
+        decoration: InputDecoration(
+          fillColor: widget.fillColor ?? Colors.transparent,
+          filled: true,
+          hintText: widget.hintText,
+          labelText: widget.labelText,
+          hintStyle: widget.hintTextStyle ??
+              TextStyle(
+                color: AppColors.c6A7283,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+          labelStyle: widget.labelStyle,
+          contentPadding: widget.contentPadding ??
+              EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(widget.borderRadius ?? 16.r),
+            borderSide: BorderSide(
+              color: widget.borderColor ?? AppColors.white,
+              width: 1,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(widget.borderRadius ?? 16.r),
+            borderSide: BorderSide(
+              color: widget.borderColor ?? Colors.blue,
+              width: 1.5,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(widget.borderRadius ?? 16.r),
+            borderSide: const BorderSide(color: Colors.red, width: 1),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(widget.borderRadius ?? 16.r),
+            borderSide: const BorderSide(color: Colors.red, width: 1),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(widget.borderRadius ?? 16.r),
+            borderSide: BorderSide(
+              color: widget.borderColor ?? AppColors.white,
+              width: 1,
+            ),
+          ),
+        ),
+        style: widget.style ??
+            TextStyle(
+              color: AppColors.c333333,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w500,
+            ),
+        items: widget.items.map((item) {
+          return DropdownMenuItem<T>(
+            value: item,
+            child: widget.itemBuilder != null
+                ? widget.itemBuilder!(item)
+                : Text(item.toString()),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
